@@ -117,22 +117,34 @@ jobs:
             echo "urgency=${{ steps.analysis_fallback.outputs.urgency }}" >> $GITHUB_OUTPUT
           fi
 
-      # 4. Enviar Email (se RESEND_API_KEY existir)
+      # 4. Enviar Email via Gmail SMTP
       - name: Send notification email
+        uses: dawidd6/action-send-mail@v3
         env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          HAS_RESEND: ${{ secrets.RESEND_API_KEY != '' }}
-        if: env.HAS_RESEND == 'true'
-        run: |
-          curl -X POST "https://api.resend.com/emails" \
-            -H "Authorization: Bearer $RESEND_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"from\": \"product-updates@multimeta.com\",
-              \"to\": [\"rafaeljavaro750@gmail.com\", \"brunoferraric@gmail.com\"],
-              \"subject\": \"🚀 Mudança no produto: ${{ steps.final_analysis.outputs.summary }}\",
-              \"html\": \"<h2>Mudança no produto detectada</h2><p><strong>Tipo:</strong> ${{ steps.final_analysis.outputs.type }}</p><p><strong>Impacto:</strong> ${{ steps.final_analysis.outputs.impacts }}</p><p><strong>Urgência:</strong> ${{ steps.final_analysis.outputs.urgency }}</p><h3>Resumo</h3><p>${{ steps.final_analysis.outputs.summary }}</p><h3>Descrição</h3><p>${{ steps.final_analysis.outputs.description }}</p><h3>Ação Recomendada</h3><p>${{ steps.final_analysis.outputs.actions }}</p><h3>Arquivos Alterados</h3><pre>${{ steps.diff.outputs.files }}</pre><p><a href='${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}'>Ver commit completo</a></p>\"
-            }" || echo "Email send failed, continuing..."
+          HAS_SMTP: ${{ secrets.SMTP_PASSWORD != '' }}
+        if: env.HAS_SMTP == 'true'
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "🚀 Mudança no produto: ${{ steps.final_analysis.outputs.summary }}"
+          to: rafaeljavaro750@gmail.com,brunoferraric@gmail.com
+          from: ${{ secrets.SMTP_USER }}
+          html_body: |
+            <h2>Mudança no produto detectada</h2>
+            <p><strong>Tipo:</strong> ${{ steps.final_analysis.outputs.type }}</p>
+            <p><strong>Impacto:</strong> ${{ steps.final_analysis.outputs.impacts }}</p>
+            <p><strong>Urgência:</strong> ${{ steps.final_analysis.outputs.urgency }}</p>
+            <h3>Resumo</h3>
+            <p>${{ steps.final_analysis.outputs.summary }}</p>
+            <h3>Descrição</h3>
+            <p>${{ steps.final_analysis.outputs.description }}</p>
+            <h3>Ação Recomendada</h3>
+            <p>${{ steps.final_analysis.outputs.actions }}</p>
+            <h3>Arquivos Alterados</h3>
+            <pre>${{ steps.diff.outputs.files }}</pre>
+            <p><a href='${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}'>Ver commit completo</a></p>
 
       # 5. Slack (se webhook existir)
       - name: Notify Slack
