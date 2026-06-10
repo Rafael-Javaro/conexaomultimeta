@@ -297,7 +297,7 @@ export default function Dashboard() {
               <MetricCard
                 label="Tempo Médio Resposta"
                 value={`${metrics.avgExpertResponseTimeHours}h`}
-                subtext="(expert)"
+                // subtext="(expert)"
                 highlight="default"
               />
             </div>
