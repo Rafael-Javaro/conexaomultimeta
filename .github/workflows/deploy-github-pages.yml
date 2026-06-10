@@ -44,23 +44,34 @@ jobs:
 
       - name: Create and deploy to gh-pages
         run: |
-          # 1. BACKUP do build ANTES de qualquer limpeza
+          # 1. BACKUP do build
           mkdir -p /tmp/deploy-backup
           cp -r out/* /tmp/deploy-backup/ 2>/dev/null || exit 1
           
           # 2. Cria branch gh-pages VAZIA
           git checkout --orphan gh-pages
           
-          # 3. Remove TUDO da branch nova (está vazia mesmo, mas por segurança)
+          # 3. Remove TUDO
           git rm -rf . 2>/dev/null || true
           
-          # 4. Copia APENAS os arquivos estáticos do build
+          # 4. Copia arquivos do build
           cp -r /tmp/deploy-backup/* .
-          
-          # 5. Cria .nojekyll (impede Jekyll processing no GitHub)
           touch .nojekyll
           
-          # 6. Add, commit e push
-          git add -A
+          # 5. Cria .gitignore que recusa TUDO para segurança
+          cat > .gitignore << 'EOF'
+          # Negar tudo exceto arquivos de build necessários
+          /*
+          !/index.html
+          !/404.html
+          !/index.txt
+          !/.nojekyll
+          !/_next/
+          EOF
+          
+          # 6. Add APENAS arquivos específicos (não -A!)
+          git add index.html 404.html index.txt .nojekyll _next/ .gitignore 2>/dev/null || true
+          
+          # 7. Commit e push
           git commit -m "Deploy to GitHub Pages" || true
           git push origin gh-pages --force
