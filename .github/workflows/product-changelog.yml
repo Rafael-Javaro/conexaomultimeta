@@ -23,23 +23,22 @@ jobs:
         id: diff
         run: |
           DIFF=$(git diff HEAD~1 HEAD)
-          # Escape para JSON
           DIFF_ESCAPED=$(echo "$DIFF" | jq -Rs .)
           echo "diff=$DIFF_ESCAPED" >> $GITHUB_OUTPUT
           
-          # Também pegar arquivos alterados
           FILES=$(git diff HEAD~1 HEAD --name-only | tr '\n' ', ')
           echo "files=$FILES" >> $GITHUB_OUTPUT
           
-          # Commit message
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "commit_msg=$COMMIT_MSG" >> $GITHUB_OUTPUT
 
-      # 2. Analisar com Claude Haiku 4.5
+      # 2. Analisar com Claude (opcional)
       - name: Analyze with Claude Haiku 4.5
         id: analysis
         env:
           CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          HAS_CLAUDE: ${{ secrets.CLAUDE_API_KEY != '' }}
+        if: env.HAS_CLAUDE == 'true'
         run: |
           ANALYSIS=$(curl -s https://api.anthropic.com/v1/messages \
             -H "x-api-key: $CLAUDE_API_KEY" \
@@ -50,22 +49,19 @@ jobs:
               "max_tokens": 1024,
               "messages": [{
                 "role": "user",
-                "content": "Você é um especialista em análise de mudanças de produto. Analise essas mudanças de código e extraia informações operacionais.\n\nArquivos alterados:\n${{ steps.diff.outputs.files }}\n\nDiff:\n${{ steps.diff.outputs.diff }}\n\nMensagem do commit:\n${{ steps.diff.outputs.commit_msg }}\n\nRetorne um JSON VÁLIDO (sem markdown, sem blocos de código) com EXATAMENTE esta estrutura:\n{\n  \"type\": \"feature|fix|breaking|refactor|docs\",\n  \"impacts\": \"expert|closer|admin|all\",\n  \"summary\": \"uma linha descrevendo a mudança\",\n  \"description\": \"2-3 frases explicando o que mudou e por quê\",\n  \"actions\": \"uma ação específica que CS/comercial precisa tomar\",\n  \"urgency\": \"low|medium|high\"\n}"
+                "content": "Analise essas mudanças de código e extraia informações operacionais.\n\nArquivos alterados:\n${{ steps.diff.outputs.files }}\n\nMensagem do commit:\n${{ steps.diff.outputs.commit_msg }}\n\nRetorne um JSON com esta estrutura:\n{\"type\": \"feature|fix|breaking|refactor|docs\", \"impacts\": \"expert|closer|admin|all\", \"summary\": \"uma linha\", \"description\": \"2-3 frases\", \"actions\": \"ação específica\", \"urgency\": \"low|medium|high\"}"
               }]
             }')
           
-          # Extract content
           RESULT=$(echo "$ANALYSIS" | jq -r '.content[0].text')
           
-          # Parse JSON response
-          TYPE=$(echo "$RESULT" | jq -r '.type')
-          IMPACTS=$(echo "$RESULT" | jq -r '.impacts')
-          SUMMARY=$(echo "$RESULT" | jq -r '.summary')
-          DESCRIPTION=$(echo "$RESULT" | jq -r '.description')
-          ACTIONS=$(echo "$RESULT" | jq -r '.actions')
-          URGENCY=$(echo "$RESULT" | jq -r '.urgency')
+          TYPE=$(echo "$RESULT" | jq -r '.type // "feature"')
+          IMPACTS=$(echo "$RESULT" | jq -r '.impacts // "all"')
+          SUMMARY=$(echo "$RESULT" | jq -r '.summary // "Mudança de código"')
+          DESCRIPTION=$(echo "$RESULT" | jq -r '.description // "Mudança realizada"')
+          ACTIONS=$(echo "$RESULT" | jq -r '.actions // "Revisar commit"')
+          URGENCY=$(echo "$RESULT" | jq -r '.urgency // "medium"')
           
-          # Export to GITHUB_OUTPUT
           echo "type=$TYPE" >> $GITHUB_OUTPUT
           echo "impacts=$IMPACTS" >> $GITHUB_OUTPUT
           echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
@@ -73,57 +69,82 @@ jobs:
           echo "actions=$ACTIONS" >> $GITHUB_OUTPUT
           echo "urgency=$URGENCY" >> $GITHUB_OUTPUT
 
-      # 3. Salvar em Supabase
-      - name: Save to Supabase
+      # 2B. Fallback se Claude não disponível
+      - name: Default Analysis Fallback
+        id: analysis_fallback
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          HAS_CLAUDE: ${{ secrets.CLAUDE_API_KEY != '' }}
+        if: env.HAS_CLAUDE != 'true' || failure()
         run: |
-          curl -X POST "$SUPABASE_URL/rest/v1/product_changes" \
-            -H "apikey: $SUPABASE_KEY" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "commit_sha": "${{ github.sha }}",
-              "commit_url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}",
-              "change_type": "${{ steps.analysis.outputs.type }}",
-              "impacts": "${{ steps.analysis.outputs.impacts }}",
-              "summary": "${{ steps.analysis.outputs.summary }}",
-              "description": "${{ steps.analysis.outputs.description }}",
-              "recommended_action": "${{ steps.analysis.outputs.actions }}",
-              "urgency": "${{ steps.analysis.outputs.urgency }}",
-              "files_changed": "${{ steps.diff.outputs.files }}",
-              "deployed_at": "now()"
-            }' || echo "Supabase insert failed, continuing..."
+          COMMIT_MSG="${{ steps.diff.outputs.commit_msg }}"
+          
+          if [[ "$COMMIT_MSG" =~ ^feat ]]; then
+            TYPE="feature"
+          elif [[ "$COMMIT_MSG" =~ ^fix ]]; then
+            TYPE="fix"
+          elif [[ "$COMMIT_MSG" =~ ^BREAKING ]]; then
+            TYPE="breaking"
+          elif [[ "$COMMIT_MSG" =~ ^refactor ]]; then
+            TYPE="refactor"
+          else
+            TYPE="docs"
+          fi
+          
+          echo "type=$TYPE" >> $GITHUB_OUTPUT
+          echo "impacts=all" >> $GITHUB_OUTPUT
+          echo "summary=Mudança: $TYPE" >> $GITHUB_OUTPUT
+          echo "description=Arquivos alterados: ${{ steps.diff.outputs.files }}" >> $GITHUB_OUTPUT
+          echo "actions=Revisar mudança" >> $GITHUB_OUTPUT
+          echo "urgency=medium" >> $GITHUB_OUTPUT
 
-      # 4. Enviar Email com Resend
+      # 3. Usar análise do Claude ou fallback
+      - name: Set final analysis
+        id: final_analysis
+        run: |
+          if [ -n "${{ steps.analysis.outputs.type }}" ]; then
+            echo "type=${{ steps.analysis.outputs.type }}" >> $GITHUB_OUTPUT
+            echo "impacts=${{ steps.analysis.outputs.impacts }}" >> $GITHUB_OUTPUT
+            echo "summary=${{ steps.analysis.outputs.summary }}" >> $GITHUB_OUTPUT
+            echo "description=${{ steps.analysis.outputs.description }}" >> $GITHUB_OUTPUT
+            echo "actions=${{ steps.analysis.outputs.actions }}" >> $GITHUB_OUTPUT
+            echo "urgency=${{ steps.analysis.outputs.urgency }}" >> $GITHUB_OUTPUT
+          else
+            echo "type=${{ steps.analysis_fallback.outputs.type }}" >> $GITHUB_OUTPUT
+            echo "impacts=${{ steps.analysis_fallback.outputs.impacts }}" >> $GITHUB_OUTPUT
+            echo "summary=${{ steps.analysis_fallback.outputs.summary }}" >> $GITHUB_OUTPUT
+            echo "description=${{ steps.analysis_fallback.outputs.description }}" >> $GITHUB_OUTPUT
+            echo "actions=${{ steps.analysis_fallback.outputs.actions }}" >> $GITHUB_OUTPUT
+            echo "urgency=${{ steps.analysis_fallback.outputs.urgency }}" >> $GITHUB_OUTPUT
+          fi
+
+      # 4. Enviar Email (se RESEND_API_KEY existir)
       - name: Send notification email
-        id: email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          HAS_RESEND: ${{ secrets.RESEND_API_KEY != '' }}
+        if: env.HAS_RESEND == 'true'
         run: |
-          EMAILS='["rafaeljavaro750@gmail.com","brunoferraric@gmail.com"'
-          
-          EMAIL_BODY="Mudança no produto detectada:\n\nTipo: ${{ steps.analysis.outputs.type }}\nImpacto: ${{ steps.analysis.outputs.impacts }}\nUrgência: ${{ steps.analysis.outputs.urgency }}\n\nResumo:\n${{ steps.analysis.outputs.summary }}\n\nDescrição:\n${{ steps.analysis.outputs.description }}\n\nAção recomendada:\n${{ steps.analysis.outputs.actions }}\n\nArquivos alterados:\n${{ steps.diff.outputs.files }}\n\nCommit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
-          
           curl -X POST "https://api.resend.com/emails" \
             -H "Authorization: Bearer $RESEND_API_KEY" \
             -H "Content-Type: application/json" \
             -d "{
               \"from\": \"product-updates@multimeta.com\",
-              \"to\": $EMAILS,
-              \"subject\": \"🚀 Mudança no produto: ${{ steps.analysis.outputs.summary }}\",
-              \"html\": \"<h2>Mudança no produto detectada</h2><p><strong>Tipo:</strong> ${{ steps.analysis.outputs.type }}</p><p><strong>Impacto:</strong> ${{ steps.analysis.outputs.impacts }}</p><p><strong>Urgência:</strong> ${{ steps.analysis.outputs.urgency }}</p><h3>Resumo</h3><p>${{ steps.analysis.outputs.summary }}</p><h3>Descrição</h3><p>${{ steps.analysis.outputs.description }}</p><h3>Ação Recomendada</h3><p>${{ steps.analysis.outputs.actions }}</p><h3>Arquivos Alterados</h3><pre>${{ steps.diff.outputs.files }}</pre><p><a href='${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}'>Ver commit completo</a></p>\"
+              \"to\": [\"rafaeljavaro750@gmail.com\", \"brunoferraric@gmail.com\"],
+              \"subject\": \"🚀 Mudança no produto: ${{ steps.final_analysis.outputs.summary }}\",
+              \"html\": \"<h2>Mudança no produto detectada</h2><p><strong>Tipo:</strong> ${{ steps.final_analysis.outputs.type }}</p><p><strong>Impacto:</strong> ${{ steps.final_analysis.outputs.impacts }}</p><p><strong>Urgência:</strong> ${{ steps.final_analysis.outputs.urgency }}</p><h3>Resumo</h3><p>${{ steps.final_analysis.outputs.summary }}</p><h3>Descrição</h3><p>${{ steps.final_analysis.outputs.description }}</p><h3>Ação Recomendada</h3><p>${{ steps.final_analysis.outputs.actions }}</p><h3>Arquivos Alterados</h3><pre>${{ steps.diff.outputs.files }}</pre><p><a href='${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}'>Ver commit completo</a></p>\"
             }" || echo "Email send failed, continuing..."
 
-      # 5. Postar no Slack via Webhook
+      # 5. Slack (se webhook existir)
       - name: Notify Slack
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          HAS_SLACK: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        if: env.HAS_SLACK == 'true'
         run: |
           COLOR="#00AA00"
-          if [ "${{ steps.analysis.outputs.urgency }}" = "high" ]; then
+          if [ "${{ steps.final_analysis.outputs.urgency }}" = "high" ]; then
             COLOR="#FF0000"
-          elif [ "${{ steps.analysis.outputs.urgency }}" = "medium" ]; then
+          elif [ "${{ steps.final_analysis.outputs.urgency }}" = "medium" ]; then
             COLOR="#FFA500"
           fi
           
@@ -136,33 +157,39 @@ jobs:
               "attachments": [
                 {
                   "color": "'$COLOR'",
-                  "title": "${{ steps.analysis.outputs.summary }}",
-                  "text": "${{ steps.analysis.outputs.description }}\n\n💡 *Ação:* ${{ steps.analysis.outputs.actions }}",
+                  "title": "${{ steps.final_analysis.outputs.summary }}",
+                  "text": "${{ steps.final_analysis.outputs.description }}\n\n💡 *Ação:* ${{ steps.final_analysis.outputs.actions }}",
                   "fields": [
-                    {
-                      "title": "Tipo",
-                      "value": "${{ steps.analysis.outputs.type }}",
-                      "short": true
-                    },
-                    {
-                      "title": "Impacto",
-                      "value": "${{ steps.analysis.outputs.impacts }}",
-                      "short": true
-                    },
-                    {
-                      "title": "Urgência",
-                      "value": "${{ steps.analysis.outputs.urgency }}",
-                      "short": true
-                    },
-                    {
-                      "title": "Arquivos",
-                      "value": "${{ steps.diff.outputs.files }}",
-                      "short": false
-                    }
+                    {"title": "Tipo", "value": "${{ steps.final_analysis.outputs.type }}", "short": true},
+                    {"title": "Impacto", "value": "${{ steps.final_analysis.outputs.impacts }}", "short": true},
+                    {"title": "Urgência", "value": "${{ steps.final_analysis.outputs.urgency }}", "short": true},
+                    {"title": "Arquivos", "value": "${{ steps.diff.outputs.files }}", "short": false}
                   ],
-                  "footer": "MultiMeta Product Automation",
-                  "ts": '$(date +%s)'
+                  "footer": "MultiMeta Product Automation"
                 }
               ]
             }' || echo "Slack notification failed, continuing..."
-        if: always()
+
+      # 6. Supabase (se URL existir)
+      - name: Save to Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          HAS_SUPABASE: ${{ secrets.SUPABASE_URL != '' }}
+        if: env.HAS_SUPABASE == 'true'
+        run: |
+          curl -X POST "$SUPABASE_URL/rest/v1/product_changes" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "commit_sha": "${{ github.sha }}",
+              "commit_url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}",
+              "change_type": "${{ steps.final_analysis.outputs.type }}",
+              "impacts": "${{ steps.final_analysis.outputs.impacts }}",
+              "summary": "${{ steps.final_analysis.outputs.summary }}",
+              "description": "${{ steps.final_analysis.outputs.description }}",
+              "recommended_action": "${{ steps.final_analysis.outputs.actions }}",
+              "urgency": "${{ steps.final_analysis.outputs.urgency }}",
+              "files_changed": "${{ steps.diff.outputs.files }}",
+              "deployed_at": "now()"
+            }' || echo "Supabase insert failed, continuing..."
