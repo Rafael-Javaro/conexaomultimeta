@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -35,10 +37,17 @@ jobs:
       - name: Build Next.js
         run: npm run build
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3.9.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Create and deploy to gh-pages
+        run: |
+          git checkout --orphan gh-pages
+          git rm -rf .
+          cp -r out/* .
+          echo "" > .nojekyll
+          git add .
+          git commit -m "Deploy to GitHub Pages" || true
+          git push origin gh-pages --force
