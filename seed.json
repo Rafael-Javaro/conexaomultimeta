@@ -1,0 +1,323 @@
+{
+  "_meta": {
+    "description": "Dados ficticios da MultiMeta para o desafio de painel admin. Periodo: ultimos 90 dias (fim em 2026-06-05). Todos os timestamps em ISO 8601 UTC.",
+    "schema": {
+      "profiles": "Cadastro de usuarios (experts e closers). role: 'expert' ou 'closer'.",
+      "opportunities": "Vagas publicadas por experts. status: 'open' | 'filled' | 'deleted'. moderation_status: 'pending' | 'approved' | 'rejected'.",
+      "opportunity_interests": "Closer demonstrando interesse em uma vaga (clicou 'tenho interesse').",
+      "conversations": "Conversa entre expert e closer sobre uma vaga. status: 'active' | 'hired' | 'archived'. hired_at preenchido quando expert marca como contratado.",
+      "messages": "Mensagens dentro de uma conversa. sender_id pode ser do expert ou do closer."
+    },
+    "notes_for_candidate_pt_BR": [
+      "Voce nao precisa usar TODOS os campos. Escolha os que importam pro painel.",
+      "Os timestamps refletem 90 dias de atividade. Use isso a seu favor pra agrupar por semana/dia.",
+      "Algumas vagas estao 'deleted' (expert removeu). Decida se conta isso ou nao.",
+      "Algumas conversas tem hired_at preenchido (viraram contratacao). Outras estao paradas.",
+      "Tempo de resposta do expert = diferenca entre mensagem do closer e a proxima mensagem do expert na mesma conversa."
+    ]
+  },
+
+  "profiles": [
+    { "id": "exp-001", "role": "expert", "company_name": "Studio Lumen", "niche": "Fotografia para casamentos", "city_state": "Sao Paulo - SP", "created_at": "2026-03-08T14:22:00Z", "moderation_status": "approved" },
+    { "id": "exp-002", "role": "expert", "company_name": "FitMente Coaching", "niche": "Mentoria de emagrecimento", "city_state": "Belo Horizonte - MG", "created_at": "2026-03-10T09:15:00Z", "moderation_status": "approved" },
+    { "id": "exp-003", "role": "expert", "company_name": "Bruna Arquitetura", "niche": "Projetos residenciais alto padrao", "city_state": "Curitiba - PR", "created_at": "2026-03-12T17:40:00Z", "moderation_status": "approved" },
+    { "id": "exp-004", "role": "expert", "company_name": "DigitalFlow Ads", "niche": "Trafego pago para infoprodutos", "city_state": "Florianopolis - SC", "created_at": "2026-03-15T11:05:00Z", "moderation_status": "approved" },
+    { "id": "exp-005", "role": "expert", "company_name": "Mente Plena Psicologia", "niche": "Terapia online", "city_state": "Porto Alegre - RS", "created_at": "2026-03-18T13:50:00Z", "moderation_status": "approved" },
+    { "id": "exp-006", "role": "expert", "company_name": "Joao Mentoria Vendas", "niche": "Vendas consultivas B2B", "city_state": "Sao Paulo - SP", "created_at": "2026-03-20T08:00:00Z", "moderation_status": "approved" },
+    { "id": "exp-007", "role": "expert", "company_name": "Eleva Cursos", "niche": "Curso de ingles para concursos", "city_state": "Brasilia - DF", "created_at": "2026-03-22T16:30:00Z", "moderation_status": "approved" },
+    { "id": "exp-008", "role": "expert", "company_name": "Nutri Renova", "niche": "Nutricao funcional", "city_state": "Recife - PE", "created_at": "2026-03-25T10:20:00Z", "moderation_status": "approved" },
+    { "id": "exp-009", "role": "expert", "company_name": "Casa Verde Reformas", "niche": "Reformas sustentaveis", "city_state": "Campinas - SP", "created_at": "2026-04-01T12:00:00Z", "moderation_status": "approved" },
+    { "id": "exp-010", "role": "expert", "company_name": "Ana Fala em Publico", "niche": "Treinamento de oratoria", "city_state": "Salvador - BA", "created_at": "2026-04-03T15:45:00Z", "moderation_status": "approved" },
+    { "id": "exp-011", "role": "expert", "company_name": "Forte Saude Suplementos", "niche": "E-commerce de suplementos", "city_state": "Goiania - GO", "created_at": "2026-04-08T09:10:00Z", "moderation_status": "approved" },
+    { "id": "exp-012", "role": "expert", "company_name": "Mariana Doces Sob Encomenda", "niche": "Confeitaria gourmet", "city_state": "Belo Horizonte - MG", "created_at": "2026-04-10T11:30:00Z", "moderation_status": "approved" },
+    { "id": "exp-013", "role": "expert", "company_name": "Marketing Para Dentistas", "niche": "Agencia nichada", "city_state": "Sao Paulo - SP", "created_at": "2026-04-15T14:00:00Z", "moderation_status": "approved" },
+    { "id": "exp-014", "role": "expert", "company_name": "Pedro Imoveis Premium", "niche": "Imobiliaria alto padrao", "city_state": "Rio de Janeiro - RJ", "created_at": "2026-04-18T10:00:00Z", "moderation_status": "approved" },
+    { "id": "exp-015", "role": "expert", "company_name": "Lia Coach Carreira", "niche": "Recolocacao executiva", "city_state": "Sao Paulo - SP", "created_at": "2026-04-22T17:15:00Z", "moderation_status": "approved" },
+
+    { "id": "exp-016", "role": "expert", "company_name": "Renato Investimentos", "niche": "Mentoria financeira", "city_state": "Sao Paulo - SP", "created_at": "2026-04-25T13:00:00Z", "moderation_status": "approved" },
+    { "id": "exp-017", "role": "expert", "company_name": "Bella Estetica Avancada", "niche": "Clinica de estetica", "city_state": "Fortaleza - CE", "created_at": "2026-05-02T09:00:00Z", "moderation_status": "approved" },
+    { "id": "exp-018", "role": "expert", "company_name": "Carlos Treinamentos", "niche": "Treinamento corporativo", "city_state": "Curitiba - PR", "created_at": "2026-05-20T11:00:00Z", "moderation_status": "approved" },
+
+    { "id": "exp-019", "role": "expert", "company_name": "Ricardo Mentor Empresarial", "niche": "Consultoria para PMEs", "city_state": "Sao Paulo - SP", "created_at": "2026-04-05T10:00:00Z", "moderation_status": "approved" },
+
+    { "id": "exp-020", "role": "expert", "company_name": "Vida Leve Yoga", "niche": "Estudio de yoga online", "city_state": "Sao Paulo - SP", "created_at": "2026-05-10T08:30:00Z", "moderation_status": "approved" },
+
+    { "id": "clo-001", "role": "closer", "bio": "Closer alto ticket, foco em mentorias e infoprodutos", "city_state": "Sao Paulo - SP", "experience_level": "senior", "specialties": ["alto-ticket", "mentoria", "infoprodutos"], "created_at": "2026-03-09T10:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-002", "role": "closer", "bio": "5 anos vendendo cursos online", "city_state": "Belo Horizonte - MG", "experience_level": "pleno", "specialties": ["cursos", "educacao"], "created_at": "2026-03-11T11:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-003", "role": "closer", "bio": "Especialista em vendas consultivas B2B", "city_state": "Sao Paulo - SP", "experience_level": "senior", "specialties": ["b2b", "saas"], "created_at": "2026-03-12T14:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-004", "role": "closer", "bio": "Closer de servicos de saude e bem-estar", "city_state": "Rio de Janeiro - RJ", "experience_level": "pleno", "specialties": ["saude", "bem-estar"], "created_at": "2026-03-14T09:30:00Z", "moderation_status": "approved" },
+    { "id": "clo-005", "role": "closer", "bio": "Foco em servicos premium e alto valor agregado", "city_state": "Curitiba - PR", "experience_level": "senior", "specialties": ["alto-ticket", "servicos"], "created_at": "2026-03-16T16:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-006", "role": "closer", "bio": "Vendas via WhatsApp e Instagram Direct", "city_state": "Recife - PE", "experience_level": "junior", "specialties": ["social-selling"], "created_at": "2026-03-18T10:15:00Z", "moderation_status": "approved" },
+    { "id": "clo-007", "role": "closer", "bio": "10 anos no mercado, multi-nicho", "city_state": "Porto Alegre - RS", "experience_level": "senior", "specialties": ["multi-nicho"], "created_at": "2026-03-20T13:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-008", "role": "closer", "bio": "Closer dedicado a infoprodutos e mentorias", "city_state": "Sao Paulo - SP", "experience_level": "pleno", "specialties": ["infoprodutos", "mentoria"], "created_at": "2026-03-22T08:45:00Z", "moderation_status": "approved" },
+    { "id": "clo-009", "role": "closer", "bio": "Especialista em e-commerce e produtos fisicos", "city_state": "Sao Paulo - SP", "experience_level": "pleno", "specialties": ["ecommerce"], "created_at": "2026-03-25T15:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-010", "role": "closer", "bio": "Vendas para servicos locais e franquias", "city_state": "Brasilia - DF", "experience_level": "pleno", "specialties": ["servicos-locais"], "created_at": "2026-03-28T11:30:00Z", "moderation_status": "approved" },
+
+    { "id": "clo-011", "role": "closer", "bio": "Disponivel para projetos novos", "city_state": "Sao Paulo - SP", "experience_level": "junior", "specialties": ["geral"], "created_at": "2026-03-30T09:00:00Z", "moderation_status": "approved" },
+
+    { "id": "clo-012", "role": "closer", "bio": "Vendedor experiente de servicos jurídicos", "city_state": "Sao Paulo - SP", "experience_level": "senior", "specialties": ["juridico", "servicos"], "created_at": "2026-04-01T14:20:00Z", "moderation_status": "approved" },
+    { "id": "clo-013", "role": "closer", "bio": "Foco em educacao continuada e cursos tecnicos", "city_state": "Florianopolis - SC", "experience_level": "pleno", "specialties": ["educacao"], "created_at": "2026-04-05T10:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-014", "role": "closer", "bio": "Closer multi-segmento, gosto de desafios", "city_state": "Salvador - BA", "experience_level": "pleno", "specialties": ["multi-segmento"], "created_at": "2026-04-08T16:30:00Z", "moderation_status": "approved" },
+    { "id": "clo-015", "role": "closer", "bio": "Especialista em servicos de tecnologia", "city_state": "Sao Paulo - SP", "experience_level": "senior", "specialties": ["tech", "saas"], "created_at": "2026-04-10T12:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-016", "role": "closer", "bio": "Iniciante motivado, busco primeira oportunidade", "city_state": "Goiania - GO", "experience_level": "junior", "specialties": ["geral"], "created_at": "2026-04-15T09:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-017", "role": "closer", "bio": "Closer com background de marketing digital", "city_state": "Sao Paulo - SP", "experience_level": "pleno", "specialties": ["marketing", "infoprodutos"], "created_at": "2026-04-18T13:45:00Z", "moderation_status": "approved" },
+    { "id": "clo-018", "role": "closer", "bio": "Vendedora de servicos para mulheres empreendedoras", "city_state": "Belo Horizonte - MG", "experience_level": "pleno", "specialties": ["empreendedorismo"], "created_at": "2026-04-22T15:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-019", "role": "closer", "bio": "Foco em vendas de imoveis e investimentos", "city_state": "Rio de Janeiro - RJ", "experience_level": "senior", "specialties": ["imoveis", "investimentos"], "created_at": "2026-05-02T10:00:00Z", "moderation_status": "approved" },
+    { "id": "clo-020", "role": "closer", "bio": "Closer iniciante, recem-formado no treinamento", "city_state": "Recife - PE", "experience_level": "junior", "specialties": ["geral"], "created_at": "2026-05-25T11:00:00Z", "moderation_status": "approved" }
+  ],
+
+  "opportunities": [
+    { "id": "vag-001", "expert_id": "exp-001", "title": "Closer para mentoria de fotografia", "description": "Procuro closer para vender mentoria de fotografia de casamento. Ticket medio R$ 4.500.", "remuneration_type": "comissao", "remuneration_value": "20% por venda", "work_format": "remoto", "status": "filled", "moderation_status": "approved", "created_at": "2026-03-15T10:00:00Z", "filled_at": "2026-04-02T14:30:00Z" },
+    { "id": "vag-002", "expert_id": "exp-002", "title": "Vendedor para programa de emagrecimento", "description": "Programa de 12 semanas, ticket R$ 2.997. Leads vem do Instagram.", "remuneration_type": "comissao", "remuneration_value": "25% por venda", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-03-17T09:00:00Z", "filled_at": null },
+    { "id": "vag-003", "expert_id": "exp-003", "title": "Closer para projetos de arquitetura", "description": "Projetos residenciais alto padrao. Ticket medio R$ 18k.", "remuneration_type": "comissao", "remuneration_value": "10% sobre projeto fechado", "work_format": "remoto", "status": "filled", "moderation_status": "approved", "created_at": "2026-03-20T11:30:00Z", "filled_at": "2026-04-15T16:00:00Z" },
+    { "id": "vag-004", "expert_id": "exp-004", "title": "Closer alto ticket para infoproduto", "description": "Curso de trafego pago. Ticket R$ 3.500. Lead aquecido.", "remuneration_type": "comissao", "remuneration_value": "30%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-03-22T14:00:00Z", "filled_at": null },
+    { "id": "vag-005", "expert_id": "exp-005", "title": "Vendedor de pacotes de terapia online", "description": "Pacote de 10 sessoes, ticket R$ 1.800.", "remuneration_type": "comissao", "remuneration_value": "20%", "work_format": "remoto", "status": "deleted", "moderation_status": "approved", "created_at": "2026-03-25T10:00:00Z", "filled_at": null, "removal_reason": "Mudei de ideia sobre contratar" },
+    { "id": "vag-006", "expert_id": "exp-006", "title": "Closer B2B vendas consultivas", "description": "Mentoria de vendas para times comerciais. Ticket R$ 12k.", "remuneration_type": "comissao", "remuneration_value": "15%", "work_format": "hibrido", "status": "filled", "moderation_status": "approved", "created_at": "2026-03-28T13:00:00Z", "filled_at": "2026-04-20T11:00:00Z" },
+    { "id": "vag-007", "expert_id": "exp-007", "title": "Vendedor de curso de ingles", "description": "Curso de ingles para concursos publicos. Ticket R$ 1.200.", "remuneration_type": "comissao", "remuneration_value": "20%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-03-30T15:00:00Z", "filled_at": null },
+    { "id": "vag-008", "expert_id": "exp-008", "title": "Closer para nutricao funcional", "description": "Acompanhamento de 6 meses. Ticket R$ 3.600.", "remuneration_type": "comissao", "remuneration_value": "22%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-04-02T10:00:00Z", "filled_at": null },
+    { "id": "vag-009", "expert_id": "exp-009", "title": "Closer para reformas residenciais", "description": "Projetos de reforma sustentavel. Ticket medio R$ 40k.", "remuneration_type": "comissao", "remuneration_value": "5% sobre projeto", "work_format": "presencial", "status": "open", "moderation_status": "approved", "created_at": "2026-04-05T11:30:00Z", "filled_at": null },
+    { "id": "vag-010", "expert_id": "exp-010", "title": "Vendedor de treinamento de oratoria", "description": "Programa intensivo de 8 semanas. Ticket R$ 2.500.", "remuneration_type": "comissao", "remuneration_value": "25%", "work_format": "remoto", "status": "filled", "moderation_status": "approved", "created_at": "2026-04-08T14:00:00Z", "filled_at": "2026-05-01T10:00:00Z" },
+    { "id": "vag-011", "expert_id": "exp-011", "title": "Closer para e-commerce de suplementos", "description": "Vendas via WhatsApp para base ja aquecida.", "remuneration_type": "fixo+comissao", "remuneration_value": "R$ 1.500 + 5%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-04-12T09:00:00Z", "filled_at": null },
+    { "id": "vag-012", "expert_id": "exp-012", "title": "Vendedor de doces sob encomenda", "description": "Vendas para festas e eventos corporativos.", "remuneration_type": "comissao", "remuneration_value": "15%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-04-14T10:30:00Z", "filled_at": null },
+    { "id": "vag-013", "expert_id": "exp-013", "title": "Closer para agencia de marketing", "description": "Servico de gestao de redes para dentistas. Ticket R$ 2.400/mes.", "remuneration_type": "comissao", "remuneration_value": "1 mensalidade por contrato fechado", "work_format": "remoto", "status": "filled", "moderation_status": "approved", "created_at": "2026-04-18T13:00:00Z", "filled_at": "2026-05-10T15:00:00Z" },
+    { "id": "vag-014", "expert_id": "exp-014", "title": "Closer para imoveis de alto padrao", "description": "Apartamentos de R$ 2M a R$ 5M na zona sul do Rio.", "remuneration_type": "comissao", "remuneration_value": "1% sobre venda", "work_format": "presencial", "status": "open", "moderation_status": "approved", "created_at": "2026-04-22T12:00:00Z", "filled_at": null },
+    { "id": "vag-015", "expert_id": "exp-015", "title": "Closer para coaching de carreira", "description": "Recolocacao para executivos. Ticket R$ 8.500.", "remuneration_type": "comissao", "remuneration_value": "18%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-04-25T17:00:00Z", "filled_at": null },
+
+    { "id": "vag-016", "expert_id": "exp-019", "title": "Closer para consultoria PME", "description": "Consultoria estrategica para PMEs. Ticket R$ 9k.", "remuneration_type": "comissao", "remuneration_value": "20%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-04-10T10:00:00Z", "filled_at": null },
+    { "id": "vag-017", "expert_id": "exp-019", "title": "Vendedor de mentoria empresarial", "description": "Mentoria 1:1 com empresarios. Ticket R$ 15k.", "remuneration_type": "comissao", "remuneration_value": "20%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-04-25T11:00:00Z", "filled_at": null },
+
+    { "id": "vag-018", "expert_id": "exp-020", "title": "Closer para estudio de yoga online", "description": "Plano anual de aulas online. Ticket R$ 1.800.", "remuneration_type": "comissao", "remuneration_value": "20%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-05-15T08:30:00Z", "filled_at": null },
+
+    { "id": "vag-019", "expert_id": "exp-002", "title": "Segundo closer para programa emagrecimento", "description": "Estamos expandindo o time.", "remuneration_type": "comissao", "remuneration_value": "25%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-06-01T10:00:00Z", "filled_at": null },
+    { "id": "vag-020", "expert_id": "exp-006", "title": "Closer adicional para vendas B2B", "description": "Mais leads do que conseguimos atender.", "remuneration_type": "comissao", "remuneration_value": "15%", "work_format": "hibrido", "status": "open", "moderation_status": "approved", "created_at": "2026-06-02T14:00:00Z", "filled_at": null },
+    { "id": "vag-021", "expert_id": "exp-013", "title": "Closer junior para agencia de marketing", "description": "Para quem esta comecando. Damos treinamento.", "remuneration_type": "fixo+comissao", "remuneration_value": "R$ 1.000 + 10%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-06-03T09:00:00Z", "filled_at": null },
+    { "id": "vag-022", "expert_id": "exp-015", "title": "Closer para programa premium de carreira", "description": "Novo programa lancado mes passado.", "remuneration_type": "comissao", "remuneration_value": "20%", "work_format": "remoto", "status": "open", "moderation_status": "approved", "created_at": "2026-06-04T16:00:00Z", "filled_at": null }
+  ],
+
+  "opportunity_interests": [
+    { "id": "int-001", "opportunity_id": "vag-001", "closer_id": "clo-001", "status": "active", "created_at": "2026-03-16T10:00:00Z" },
+    { "id": "int-002", "opportunity_id": "vag-001", "closer_id": "clo-008", "status": "active", "created_at": "2026-03-18T11:00:00Z" },
+    { "id": "int-003", "opportunity_id": "vag-002", "closer_id": "clo-002", "status": "active", "created_at": "2026-03-18T09:30:00Z" },
+    { "id": "int-004", "opportunity_id": "vag-002", "closer_id": "clo-004", "status": "active", "created_at": "2026-03-19T14:00:00Z" },
+    { "id": "int-005", "opportunity_id": "vag-002", "closer_id": "clo-011", "status": "active", "created_at": "2026-03-20T16:00:00Z" },
+    { "id": "int-006", "opportunity_id": "vag-003", "closer_id": "clo-005", "status": "active", "created_at": "2026-03-21T10:00:00Z" },
+    { "id": "int-007", "opportunity_id": "vag-004", "closer_id": "clo-001", "status": "active", "created_at": "2026-03-23T11:00:00Z" },
+    { "id": "int-008", "opportunity_id": "vag-004", "closer_id": "clo-008", "status": "active", "created_at": "2026-03-24T09:00:00Z" },
+    { "id": "int-009", "opportunity_id": "vag-004", "closer_id": "clo-017", "status": "active", "created_at": "2026-04-20T15:00:00Z" },
+    { "id": "int-010", "opportunity_id": "vag-004", "closer_id": "clo-011", "status": "active", "created_at": "2026-04-22T10:00:00Z" },
+    { "id": "int-011", "opportunity_id": "vag-006", "closer_id": "clo-003", "status": "active", "created_at": "2026-03-29T13:00:00Z" },
+    { "id": "int-012", "opportunity_id": "vag-006", "closer_id": "clo-015", "status": "active", "created_at": "2026-04-12T11:00:00Z" },
+    { "id": "int-013", "opportunity_id": "vag-007", "closer_id": "clo-013", "status": "active", "created_at": "2026-04-01T10:00:00Z" },
+    { "id": "int-014", "opportunity_id": "vag-007", "closer_id": "clo-002", "status": "active", "created_at": "2026-04-03T16:00:00Z" },
+    { "id": "int-015", "opportunity_id": "vag-008", "closer_id": "clo-004", "status": "active", "created_at": "2026-04-03T11:00:00Z" },
+    { "id": "int-016", "opportunity_id": "vag-008", "closer_id": "clo-011", "status": "active", "created_at": "2026-04-04T13:00:00Z" },
+    { "id": "int-017", "opportunity_id": "vag-009", "closer_id": "clo-007", "status": "active", "created_at": "2026-04-06T14:00:00Z" },
+    { "id": "int-018", "opportunity_id": "vag-010", "closer_id": "clo-014", "status": "active", "created_at": "2026-04-09T10:00:00Z" },
+    { "id": "int-019", "opportunity_id": "vag-011", "closer_id": "clo-009", "status": "active", "created_at": "2026-04-13T11:00:00Z" },
+    { "id": "int-020", "opportunity_id": "vag-011", "closer_id": "clo-006", "status": "active", "created_at": "2026-04-14T15:00:00Z" },
+    { "id": "int-021", "opportunity_id": "vag-012", "closer_id": "clo-018", "status": "active", "created_at": "2026-04-15T09:00:00Z" },
+    { "id": "int-022", "opportunity_id": "vag-013", "closer_id": "clo-017", "status": "active", "created_at": "2026-04-19T10:00:00Z" },
+    { "id": "int-023", "opportunity_id": "vag-013", "closer_id": "clo-008", "status": "active", "created_at": "2026-04-20T14:00:00Z" },
+    { "id": "int-024", "opportunity_id": "vag-014", "closer_id": "clo-019", "status": "active", "created_at": "2026-05-03T11:00:00Z" },
+    { "id": "int-025", "opportunity_id": "vag-014", "closer_id": "clo-011", "status": "active", "created_at": "2026-05-05T10:00:00Z" },
+    { "id": "int-026", "opportunity_id": "vag-015", "closer_id": "clo-001", "status": "active", "created_at": "2026-04-26T10:00:00Z" },
+    { "id": "int-027", "opportunity_id": "vag-015", "closer_id": "clo-012", "status": "active", "created_at": "2026-04-28T13:00:00Z" },
+    { "id": "int-028", "opportunity_id": "vag-015", "closer_id": "clo-011", "status": "active", "created_at": "2026-05-01T15:00:00Z" },
+    { "id": "int-029", "opportunity_id": "vag-016", "closer_id": "clo-003", "status": "active", "created_at": "2026-04-11T09:00:00Z" },
+    { "id": "int-030", "opportunity_id": "vag-016", "closer_id": "clo-007", "status": "active", "created_at": "2026-04-12T11:00:00Z" },
+    { "id": "int-031", "opportunity_id": "vag-016", "closer_id": "clo-011", "status": "active", "created_at": "2026-04-15T10:00:00Z" },
+    { "id": "int-032", "opportunity_id": "vag-017", "closer_id": "clo-001", "status": "active", "created_at": "2026-04-26T14:00:00Z" },
+    { "id": "int-033", "opportunity_id": "vag-017", "closer_id": "clo-011", "status": "active", "created_at": "2026-04-28T16:00:00Z" },
+    { "id": "int-034", "opportunity_id": "vag-018", "closer_id": "clo-004", "status": "active", "created_at": "2026-05-16T10:00:00Z" },
+    { "id": "int-035", "opportunity_id": "vag-019", "closer_id": "clo-002", "status": "active", "created_at": "2026-06-01T14:00:00Z" },
+    { "id": "int-036", "opportunity_id": "vag-019", "closer_id": "clo-011", "status": "active", "created_at": "2026-06-02T10:00:00Z" },
+    { "id": "int-037", "opportunity_id": "vag-020", "closer_id": "clo-003", "status": "active", "created_at": "2026-06-02T16:00:00Z" },
+    { "id": "int-038", "opportunity_id": "vag-021", "closer_id": "clo-016", "status": "active", "created_at": "2026-06-03T11:00:00Z" },
+    { "id": "int-039", "opportunity_id": "vag-021", "closer_id": "clo-020", "status": "active", "created_at": "2026-06-04T09:00:00Z" },
+    { "id": "int-040", "opportunity_id": "vag-022", "closer_id": "clo-011", "status": "active", "created_at": "2026-06-05T08:00:00Z" }
+  ],
+
+  "conversations": [
+    { "id": "con-001", "opportunity_id": "vag-001", "expert_id": "exp-001", "closer_id": "clo-001", "status": "hired", "hired_at": "2026-04-02T14:30:00Z", "created_at": "2026-03-16T11:00:00Z", "updated_at": "2026-04-02T14:30:00Z" },
+    { "id": "con-002", "opportunity_id": "vag-001", "expert_id": "exp-001", "closer_id": "clo-008", "status": "archived", "hired_at": null, "created_at": "2026-03-18T12:00:00Z", "updated_at": "2026-04-02T15:00:00Z" },
+    { "id": "con-003", "opportunity_id": "vag-002", "expert_id": "exp-002", "closer_id": "clo-002", "status": "active", "hired_at": null, "created_at": "2026-03-18T10:00:00Z", "updated_at": "2026-06-02T11:00:00Z" },
+    { "id": "con-004", "opportunity_id": "vag-002", "expert_id": "exp-002", "closer_id": "clo-004", "status": "active", "hired_at": null, "created_at": "2026-03-19T15:00:00Z", "updated_at": "2026-05-28T10:00:00Z" },
+    { "id": "con-005", "opportunity_id": "vag-002", "expert_id": "exp-002", "closer_id": "clo-011", "status": "active", "hired_at": null, "created_at": "2026-03-20T17:00:00Z", "updated_at": "2026-03-22T18:00:00Z" },
+    { "id": "con-006", "opportunity_id": "vag-003", "expert_id": "exp-003", "closer_id": "clo-005", "status": "hired", "hired_at": "2026-04-15T16:00:00Z", "created_at": "2026-03-21T11:00:00Z", "updated_at": "2026-04-15T16:00:00Z" },
+    { "id": "con-007", "opportunity_id": "vag-004", "expert_id": "exp-004", "closer_id": "clo-001", "status": "active", "hired_at": null, "created_at": "2026-03-23T12:00:00Z", "updated_at": "2026-06-01T14:00:00Z" },
+    { "id": "con-008", "opportunity_id": "vag-004", "expert_id": "exp-004", "closer_id": "clo-008", "status": "active", "hired_at": null, "created_at": "2026-03-24T10:00:00Z", "updated_at": "2026-05-30T09:00:00Z" },
+    { "id": "con-009", "opportunity_id": "vag-004", "expert_id": "exp-004", "closer_id": "clo-017", "status": "active", "hired_at": null, "created_at": "2026-04-20T16:00:00Z", "updated_at": "2026-05-15T11:00:00Z" },
+    { "id": "con-010", "opportunity_id": "vag-004", "expert_id": "exp-004", "closer_id": "clo-011", "status": "active", "hired_at": null, "created_at": "2026-04-22T11:00:00Z", "updated_at": "2026-04-23T12:00:00Z" },
+    { "id": "con-011", "opportunity_id": "vag-006", "expert_id": "exp-006", "closer_id": "clo-003", "status": "hired", "hired_at": "2026-04-20T11:00:00Z", "created_at": "2026-03-29T14:00:00Z", "updated_at": "2026-04-20T11:00:00Z" },
+    { "id": "con-012", "opportunity_id": "vag-006", "expert_id": "exp-006", "closer_id": "clo-015", "status": "archived", "hired_at": null, "created_at": "2026-04-12T12:00:00Z", "updated_at": "2026-04-20T12:00:00Z" },
+    { "id": "con-013", "opportunity_id": "vag-007", "expert_id": "exp-007", "closer_id": "clo-013", "status": "active", "hired_at": null, "created_at": "2026-04-01T11:00:00Z", "updated_at": "2026-05-28T15:00:00Z" },
+    { "id": "con-014", "opportunity_id": "vag-007", "expert_id": "exp-007", "closer_id": "clo-002", "status": "active", "hired_at": null, "created_at": "2026-04-03T17:00:00Z", "updated_at": "2026-05-20T10:00:00Z" },
+    { "id": "con-015", "opportunity_id": "vag-008", "expert_id": "exp-008", "closer_id": "clo-004", "status": "active", "hired_at": null, "created_at": "2026-04-03T12:00:00Z", "updated_at": "2026-06-03T13:00:00Z" },
+    { "id": "con-016", "opportunity_id": "vag-008", "expert_id": "exp-008", "closer_id": "clo-011", "status": "active", "hired_at": null, "created_at": "2026-04-04T14:00:00Z", "updated_at": "2026-04-05T15:00:00Z" },
+    { "id": "con-017", "opportunity_id": "vag-009", "expert_id": "exp-009", "closer_id": "clo-007", "status": "active", "hired_at": null, "created_at": "2026-04-06T15:00:00Z", "updated_at": "2026-05-25T11:00:00Z" },
+    { "id": "con-018", "opportunity_id": "vag-010", "expert_id": "exp-010", "closer_id": "clo-014", "status": "hired", "hired_at": "2026-05-01T10:00:00Z", "created_at": "2026-04-09T11:00:00Z", "updated_at": "2026-05-01T10:00:00Z" },
+    { "id": "con-019", "opportunity_id": "vag-011", "expert_id": "exp-011", "closer_id": "clo-009", "status": "active", "hired_at": null, "created_at": "2026-04-13T12:00:00Z", "updated_at": "2026-05-28T14:00:00Z" },
+    { "id": "con-020", "opportunity_id": "vag-011", "expert_id": "exp-011", "closer_id": "clo-006", "status": "active", "hired_at": null, "created_at": "2026-04-14T16:00:00Z", "updated_at": "2026-05-10T11:00:00Z" },
+    { "id": "con-021", "opportunity_id": "vag-012", "expert_id": "exp-012", "closer_id": "clo-018", "status": "active", "hired_at": null, "created_at": "2026-04-15T10:00:00Z", "updated_at": "2026-05-15T16:00:00Z" },
+    { "id": "con-022", "opportunity_id": "vag-013", "expert_id": "exp-013", "closer_id": "clo-017", "status": "hired", "hired_at": "2026-05-10T15:00:00Z", "created_at": "2026-04-19T11:00:00Z", "updated_at": "2026-05-10T15:00:00Z" },
+    { "id": "con-023", "opportunity_id": "vag-013", "expert_id": "exp-013", "closer_id": "clo-008", "status": "archived", "hired_at": null, "created_at": "2026-04-20T15:00:00Z", "updated_at": "2026-05-10T16:00:00Z" },
+    { "id": "con-024", "opportunity_id": "vag-014", "expert_id": "exp-014", "closer_id": "clo-019", "status": "active", "hired_at": null, "created_at": "2026-05-03T12:00:00Z", "updated_at": "2026-06-04T10:00:00Z" },
+    { "id": "con-025", "opportunity_id": "vag-014", "expert_id": "exp-014", "closer_id": "clo-011", "status": "active", "hired_at": null, "created_at": "2026-05-05T11:00:00Z", "updated_at": "2026-05-06T12:00:00Z" },
+    { "id": "con-026", "opportunity_id": "vag-015", "expert_id": "exp-015", "closer_id": "clo-001", "status": "active", "hired_at": null, "created_at": "2026-04-26T11:00:00Z", "updated_at": "2026-06-03T14:00:00Z" },
+    { "id": "con-027", "opportunity_id": "vag-015", "expert_id": "exp-015", "closer_id": "clo-012", "status": "active", "hired_at": null, "created_at": "2026-04-28T14:00:00Z", "updated_at": "2026-05-30T12:00:00Z" },
+    { "id": "con-028", "opportunity_id": "vag-015", "expert_id": "exp-015", "closer_id": "clo-011", "status": "active", "hired_at": null, "created_at": "2026-05-01T16:00:00Z", "updated_at": "2026-05-02T17:00:00Z" },
+    { "id": "con-029", "opportunity_id": "vag-016", "expert_id": "exp-019", "closer_id": "clo-003", "status": "active", "hired_at": null, "created_at": "2026-04-11T10:00:00Z", "updated_at": "2026-05-20T15:00:00Z" },
+    { "id": "con-030", "opportunity_id": "vag-016", "expert_id": "exp-019", "closer_id": "clo-007", "status": "active", "hired_at": null, "created_at": "2026-04-12T12:00:00Z", "updated_at": "2026-05-15T10:00:00Z" },
+    { "id": "con-031", "opportunity_id": "vag-017", "expert_id": "exp-019", "closer_id": "clo-001", "status": "active", "hired_at": null, "created_at": "2026-04-26T15:00:00Z", "updated_at": "2026-05-25T11:00:00Z" },
+    { "id": "con-032", "opportunity_id": "vag-018", "expert_id": "exp-020", "closer_id": "clo-004", "status": "active", "hired_at": null, "created_at": "2026-05-16T11:00:00Z", "updated_at": "2026-06-02T16:00:00Z" },
+    { "id": "con-033", "opportunity_id": "vag-019", "expert_id": "exp-002", "closer_id": "clo-002", "status": "active", "hired_at": null, "created_at": "2026-06-01T15:00:00Z", "updated_at": "2026-06-03T11:00:00Z" },
+    { "id": "con-034", "opportunity_id": "vag-020", "expert_id": "exp-006", "closer_id": "clo-003", "status": "active", "hired_at": null, "created_at": "2026-06-02T17:00:00Z", "updated_at": "2026-06-04T10:00:00Z" }
+  ],
+
+  "messages": [
+    { "id": "msg-001", "conversation_id": "con-001", "sender_id": "clo-001", "content": "Oi! Tenho muito interesse na vaga. Posso te contar minha experiencia?", "created_at": "2026-03-16T11:00:00Z", "read_at": "2026-03-16T11:30:00Z" },
+    { "id": "msg-002", "conversation_id": "con-001", "sender_id": "exp-001", "content": "Claro, manda mais detalhes!", "created_at": "2026-03-16T12:00:00Z", "read_at": "2026-03-16T12:05:00Z" },
+    { "id": "msg-003", "conversation_id": "con-001", "sender_id": "clo-001", "content": "Trabalho com alto ticket ha 4 anos, ja vendi mentorias de R$ 5k a R$ 20k.", "created_at": "2026-03-16T12:30:00Z", "read_at": "2026-03-16T13:00:00Z" },
+    { "id": "msg-004", "conversation_id": "con-001", "sender_id": "exp-001", "content": "Perfeito. Vamos marcar uma call essa semana?", "created_at": "2026-03-16T14:00:00Z", "read_at": "2026-03-16T14:30:00Z" },
+    { "id": "msg-005", "conversation_id": "con-001", "sender_id": "clo-001", "content": "Pode ser quinta as 15h.", "created_at": "2026-03-16T14:45:00Z", "read_at": "2026-03-16T15:00:00Z" },
+    { "id": "msg-006", "conversation_id": "con-001", "sender_id": "exp-001", "content": "Fechado!", "created_at": "2026-03-16T15:00:00Z", "read_at": "2026-03-16T15:10:00Z" },
+
+    { "id": "msg-007", "conversation_id": "con-002", "sender_id": "clo-008", "content": "Tenho disponibilidade pra comecar essa semana.", "created_at": "2026-03-18T12:00:00Z", "read_at": "2026-03-19T10:00:00Z" },
+    { "id": "msg-008", "conversation_id": "con-002", "sender_id": "exp-001", "content": "Obrigado pelo interesse! Vou avaliar e te respondo.", "created_at": "2026-03-19T10:30:00Z", "read_at": "2026-03-19T11:00:00Z" },
+    { "id": "msg-009", "conversation_id": "con-002", "sender_id": "exp-001", "content": "Acabei contratando outro closer, mas obrigado!", "created_at": "2026-04-02T15:00:00Z", "read_at": "2026-04-02T16:00:00Z" },
+
+    { "id": "msg-010", "conversation_id": "con-003", "sender_id": "clo-002", "content": "Oi! Trabalho com programas de saude ha 5 anos.", "created_at": "2026-03-18T10:00:00Z", "read_at": "2026-03-18T11:00:00Z" },
+    { "id": "msg-011", "conversation_id": "con-003", "sender_id": "exp-002", "content": "Otimo! Qual sua taxa de conversao media?", "created_at": "2026-03-18T11:30:00Z", "read_at": "2026-03-18T12:00:00Z" },
+    { "id": "msg-012", "conversation_id": "con-003", "sender_id": "clo-002", "content": "Em torno de 25% em lead morno.", "created_at": "2026-03-18T13:00:00Z", "read_at": "2026-03-18T14:00:00Z" },
+    { "id": "msg-013", "conversation_id": "con-003", "sender_id": "exp-002", "content": "Vamos fazer um teste com 20 leads?", "created_at": "2026-05-15T10:00:00Z", "read_at": "2026-05-15T11:00:00Z" },
+    { "id": "msg-014", "conversation_id": "con-003", "sender_id": "clo-002", "content": "Bora! Quando comecamos?", "created_at": "2026-05-15T11:30:00Z", "read_at": "2026-05-16T09:00:00Z" },
+    { "id": "msg-015", "conversation_id": "con-003", "sender_id": "exp-002", "content": "Te mando o material amanha.", "created_at": "2026-06-02T11:00:00Z", "read_at": null },
+
+    { "id": "msg-016", "conversation_id": "con-004", "sender_id": "clo-004", "content": "Tenho interesse, podemos conversar?", "created_at": "2026-03-19T15:00:00Z", "read_at": "2026-03-20T08:00:00Z" },
+    { "id": "msg-017", "conversation_id": "con-004", "sender_id": "exp-002", "content": "Claro! Me conta sobre voce.", "created_at": "2026-03-20T09:00:00Z", "read_at": "2026-03-20T10:00:00Z" },
+    { "id": "msg-018", "conversation_id": "con-004", "sender_id": "clo-004", "content": "Foco em saude e bem-estar. 3 anos de experiencia.", "created_at": "2026-03-20T11:00:00Z", "read_at": "2026-03-20T12:00:00Z" },
+    { "id": "msg-019", "conversation_id": "con-004", "sender_id": "exp-002", "content": "Vou marcar uma call essa semana.", "created_at": "2026-05-28T10:00:00Z", "read_at": "2026-05-28T11:00:00Z" },
+
+    { "id": "msg-020", "conversation_id": "con-005", "sender_id": "clo-011", "content": "Oi! Tenho muito interesse na vaga.", "created_at": "2026-03-20T17:00:00Z", "read_at": "2026-03-21T09:00:00Z" },
+    { "id": "msg-021", "conversation_id": "con-005", "sender_id": "exp-002", "content": "Obrigado, vou avaliar.", "created_at": "2026-03-22T18:00:00Z", "read_at": "2026-03-23T08:00:00Z" },
+    { "id": "msg-022", "conversation_id": "con-005", "sender_id": "clo-011", "content": "Algum retorno?", "created_at": "2026-04-05T10:00:00Z", "read_at": null },
+    { "id": "msg-023", "conversation_id": "con-005", "sender_id": "clo-011", "content": "Ainda tem vaga aberta?", "created_at": "2026-05-10T14:00:00Z", "read_at": null },
+
+    { "id": "msg-024", "conversation_id": "con-006", "sender_id": "clo-005", "content": "Vendi 8 projetos de arquitetura ano passado, ticket medio R$ 20k.", "created_at": "2026-03-21T11:00:00Z", "read_at": "2026-03-21T12:00:00Z" },
+    { "id": "msg-025", "conversation_id": "con-006", "sender_id": "exp-003", "content": "Curti! Vamos conversar.", "created_at": "2026-03-21T13:00:00Z", "read_at": "2026-03-21T14:00:00Z" },
+    { "id": "msg-026", "conversation_id": "con-006", "sender_id": "exp-003", "content": "Fechei contigo! Quando comecamos?", "created_at": "2026-04-15T16:00:00Z", "read_at": "2026-04-15T16:30:00Z" },
+
+    { "id": "msg-027", "conversation_id": "con-007", "sender_id": "clo-001", "content": "Adoraria trabalhar com voce. Tenho experiencia em infoproduto.", "created_at": "2026-03-23T12:00:00Z", "read_at": "2026-03-23T14:00:00Z" },
+    { "id": "msg-028", "conversation_id": "con-007", "sender_id": "exp-004", "content": "Me conta mais sobre seu historico.", "created_at": "2026-03-23T15:00:00Z", "read_at": "2026-03-23T16:00:00Z" },
+    { "id": "msg-029", "conversation_id": "con-007", "sender_id": "clo-001", "content": "[mensagem longa com cases]", "created_at": "2026-03-23T17:00:00Z", "read_at": "2026-03-24T09:00:00Z" },
+    { "id": "msg-030", "conversation_id": "con-007", "sender_id": "exp-004", "content": "Bora marcar call.", "created_at": "2026-03-24T10:00:00Z", "read_at": "2026-03-24T11:00:00Z" },
+    { "id": "msg-031", "conversation_id": "con-007", "sender_id": "clo-001", "content": "Como ficou a decisao?", "created_at": "2026-05-15T10:00:00Z", "read_at": "2026-05-15T11:00:00Z" },
+    { "id": "msg-032", "conversation_id": "con-007", "sender_id": "exp-004", "content": "Ainda estou avaliando opcoes, te respondo logo.", "created_at": "2026-06-01T14:00:00Z", "read_at": null },
+
+    { "id": "msg-033", "conversation_id": "con-008", "sender_id": "clo-008", "content": "Tenho interesse! Foco em infoprodutos ha 3 anos.", "created_at": "2026-03-24T10:00:00Z", "read_at": "2026-03-24T11:00:00Z" },
+    { "id": "msg-034", "conversation_id": "con-008", "sender_id": "exp-004", "content": "Otimo, vamos conversar.", "created_at": "2026-03-24T13:00:00Z", "read_at": "2026-03-24T14:00:00Z" },
+    { "id": "msg-035", "conversation_id": "con-008", "sender_id": "clo-008", "content": "Disponivel quando voce quiser.", "created_at": "2026-03-24T15:00:00Z", "read_at": "2026-03-25T09:00:00Z" },
+    { "id": "msg-036", "conversation_id": "con-008", "sender_id": "exp-004", "content": "Posso te ligar amanha?", "created_at": "2026-05-30T09:00:00Z", "read_at": "2026-05-30T10:00:00Z" },
+
+    { "id": "msg-037", "conversation_id": "con-009", "sender_id": "clo-017", "content": "Tenho experiencia em marketing digital e quero migrar pra vendas alto ticket.", "created_at": "2026-04-20T16:00:00Z", "read_at": "2026-04-21T09:00:00Z" },
+    { "id": "msg-038", "conversation_id": "con-009", "sender_id": "exp-004", "content": "Curti seu perfil. Vamos conversar.", "created_at": "2026-04-21T10:00:00Z", "read_at": "2026-04-21T11:00:00Z" },
+    { "id": "msg-039", "conversation_id": "con-009", "sender_id": "clo-017", "content": "Beleza, quando?", "created_at": "2026-05-15T11:00:00Z", "read_at": null },
+
+    { "id": "msg-040", "conversation_id": "con-010", "sender_id": "clo-011", "content": "Posso fazer parte da equipe?", "created_at": "2026-04-22T11:00:00Z", "read_at": "2026-04-22T12:00:00Z" },
+    { "id": "msg-041", "conversation_id": "con-010", "sender_id": "exp-004", "content": "Obrigado, vou analisar.", "created_at": "2026-04-23T12:00:00Z", "read_at": "2026-04-23T13:00:00Z" },
+
+    { "id": "msg-042", "conversation_id": "con-011", "sender_id": "clo-003", "content": "Tenho 6 anos de B2B SaaS. Quero focar em mentoria.", "created_at": "2026-03-29T14:00:00Z", "read_at": "2026-03-29T15:00:00Z" },
+    { "id": "msg-043", "conversation_id": "con-011", "sender_id": "exp-006", "content": "Perfil top! Vamos conversar.", "created_at": "2026-03-29T16:00:00Z", "read_at": "2026-03-29T17:00:00Z" },
+    { "id": "msg-044", "conversation_id": "con-011", "sender_id": "exp-006", "content": "Fechei contigo. Onboarding semana que vem.", "created_at": "2026-04-20T11:00:00Z", "read_at": "2026-04-20T11:30:00Z" },
+
+    { "id": "msg-045", "conversation_id": "con-012", "sender_id": "clo-015", "content": "Sou de tech, gostaria de testar mentoria.", "created_at": "2026-04-12T12:00:00Z", "read_at": "2026-04-12T13:00:00Z" },
+    { "id": "msg-046", "conversation_id": "con-012", "sender_id": "exp-006", "content": "Vou conversar com outras pessoas e te retorno.", "created_at": "2026-04-13T10:00:00Z", "read_at": "2026-04-13T11:00:00Z" },
+    { "id": "msg-047", "conversation_id": "con-012", "sender_id": "exp-006", "content": "Fechei com outro candidato. Obrigado!", "created_at": "2026-04-20T12:00:00Z", "read_at": "2026-04-20T13:00:00Z" },
+
+    { "id": "msg-048", "conversation_id": "con-013", "sender_id": "clo-013", "content": "Trabalho com educacao ha 4 anos.", "created_at": "2026-04-01T11:00:00Z", "read_at": "2026-04-01T12:00:00Z" },
+    { "id": "msg-049", "conversation_id": "con-013", "sender_id": "exp-007", "content": "Curti. Manda seu portifolio.", "created_at": "2026-04-01T14:00:00Z", "read_at": "2026-04-01T15:00:00Z" },
+    { "id": "msg-050", "conversation_id": "con-013", "sender_id": "clo-013", "content": "[link do portfolio]", "created_at": "2026-04-01T16:00:00Z", "read_at": "2026-04-02T09:00:00Z" },
+    { "id": "msg-051", "conversation_id": "con-013", "sender_id": "exp-007", "content": "Vamos marcar call.", "created_at": "2026-05-28T15:00:00Z", "read_at": "2026-05-28T16:00:00Z" },
+
+    { "id": "msg-052", "conversation_id": "con-014", "sender_id": "clo-002", "content": "Curso de ingles bate com meu nicho.", "created_at": "2026-04-03T17:00:00Z", "read_at": "2026-04-04T08:00:00Z" },
+    { "id": "msg-053", "conversation_id": "con-014", "sender_id": "exp-007", "content": "Bom! Vamos conversar.", "created_at": "2026-04-04T10:00:00Z", "read_at": "2026-04-04T11:00:00Z" },
+    { "id": "msg-054", "conversation_id": "con-014", "sender_id": "clo-002", "content": "Disponivel essa semana.", "created_at": "2026-05-20T10:00:00Z", "read_at": null },
+
+    { "id": "msg-055", "conversation_id": "con-015", "sender_id": "clo-004", "content": "Nutricao funcional bate com meu perfil de saude.", "created_at": "2026-04-03T12:00:00Z", "read_at": "2026-04-03T13:00:00Z" },
+    { "id": "msg-056", "conversation_id": "con-015", "sender_id": "exp-008", "content": "Otimo! Vamos conversar.", "created_at": "2026-04-03T14:00:00Z", "read_at": "2026-04-03T15:00:00Z" },
+    { "id": "msg-057", "conversation_id": "con-015", "sender_id": "clo-004", "content": "Quando podemos marcar?", "created_at": "2026-06-03T13:00:00Z", "read_at": null },
+
+    { "id": "msg-058", "conversation_id": "con-016", "sender_id": "clo-011", "content": "Tenho interesse!", "created_at": "2026-04-04T14:00:00Z", "read_at": "2026-04-04T15:00:00Z" },
+    { "id": "msg-059", "conversation_id": "con-016", "sender_id": "exp-008", "content": "Vou avaliar.", "created_at": "2026-04-05T15:00:00Z", "read_at": "2026-04-05T16:00:00Z" },
+
+    { "id": "msg-060", "conversation_id": "con-017", "sender_id": "clo-007", "content": "10 anos de mercado, ja vendi reformas de R$ 100k+.", "created_at": "2026-04-06T15:00:00Z", "read_at": "2026-04-06T16:00:00Z" },
+    { "id": "msg-061", "conversation_id": "con-017", "sender_id": "exp-009", "content": "Perfeito! Vamos conversar.", "created_at": "2026-04-06T17:00:00Z", "read_at": "2026-04-07T09:00:00Z" },
+    { "id": "msg-062", "conversation_id": "con-017", "sender_id": "exp-009", "content": "Voce esta em SP, conseguimos algo presencial?", "created_at": "2026-05-25T11:00:00Z", "read_at": "2026-05-25T12:00:00Z" },
+
+    { "id": "msg-063", "conversation_id": "con-018", "sender_id": "clo-014", "content": "Multi-segmento, ja vendi oratoria antes.", "created_at": "2026-04-09T11:00:00Z", "read_at": "2026-04-09T12:00:00Z" },
+    { "id": "msg-064", "conversation_id": "con-018", "sender_id": "exp-010", "content": "Otimo perfil! Vamos conversar.", "created_at": "2026-04-09T13:00:00Z", "read_at": "2026-04-09T14:00:00Z" },
+    { "id": "msg-065", "conversation_id": "con-018", "sender_id": "exp-010", "content": "Fechei contigo!", "created_at": "2026-05-01T10:00:00Z", "read_at": "2026-05-01T10:30:00Z" },
+
+    { "id": "msg-066", "conversation_id": "con-019", "sender_id": "clo-009", "content": "Ecommerce e meu forte. Suplementos eu amo.", "created_at": "2026-04-13T12:00:00Z", "read_at": "2026-04-13T13:00:00Z" },
+    { "id": "msg-067", "conversation_id": "con-019", "sender_id": "exp-011", "content": "Que bom! Manda mais detalhes.", "created_at": "2026-04-13T14:00:00Z", "read_at": "2026-04-13T15:00:00Z" },
+    { "id": "msg-068", "conversation_id": "con-019", "sender_id": "clo-009", "content": "Ja gerei R$ 500k em vendas de suplementos ano passado.", "created_at": "2026-04-13T16:00:00Z", "read_at": "2026-04-14T09:00:00Z" },
+    { "id": "msg-069", "conversation_id": "con-019", "sender_id": "exp-011", "content": "Top! Te chamo pra call.", "created_at": "2026-05-28T14:00:00Z", "read_at": null },
+
+    { "id": "msg-070", "conversation_id": "con-020", "sender_id": "clo-006", "content": "Vendo via WhatsApp ha 2 anos.", "created_at": "2026-04-14T16:00:00Z", "read_at": "2026-04-14T17:00:00Z" },
+    { "id": "msg-071", "conversation_id": "con-020", "sender_id": "exp-011", "content": "Vou avaliar.", "created_at": "2026-05-10T11:00:00Z", "read_at": "2026-05-10T12:00:00Z" },
+
+    { "id": "msg-072", "conversation_id": "con-021", "sender_id": "clo-018", "content": "Vendo pra mulheres empreendedoras, encaixa.", "created_at": "2026-04-15T10:00:00Z", "read_at": "2026-04-15T11:00:00Z" },
+    { "id": "msg-073", "conversation_id": "con-021", "sender_id": "exp-012", "content": "Que demais! Vamos conversar.", "created_at": "2026-04-15T12:00:00Z", "read_at": "2026-04-15T13:00:00Z" },
+    { "id": "msg-074", "conversation_id": "con-021", "sender_id": "exp-012", "content": "Estou pensando em expandir, conversamos semana que vem?", "created_at": "2026-05-15T16:00:00Z", "read_at": null },
+
+    { "id": "msg-075", "conversation_id": "con-022", "sender_id": "clo-017", "content": "Background de marketing digital, encaixa direto.", "created_at": "2026-04-19T11:00:00Z", "read_at": "2026-04-19T12:00:00Z" },
+    { "id": "msg-076", "conversation_id": "con-022", "sender_id": "exp-013", "content": "Bora!", "created_at": "2026-04-19T13:00:00Z", "read_at": "2026-04-19T14:00:00Z" },
+    { "id": "msg-077", "conversation_id": "con-022", "sender_id": "exp-013", "content": "Fechei contigo. Onboarding semana que vem.", "created_at": "2026-05-10T15:00:00Z", "read_at": "2026-05-10T15:30:00Z" },
+
+    { "id": "msg-078", "conversation_id": "con-023", "sender_id": "clo-008", "content": "Tenho interesse na vaga.", "created_at": "2026-04-20T15:00:00Z", "read_at": "2026-04-20T16:00:00Z" },
+    { "id": "msg-079", "conversation_id": "con-023", "sender_id": "exp-013", "content": "Obrigado pelo interesse.", "created_at": "2026-04-21T10:00:00Z", "read_at": "2026-04-21T11:00:00Z" },
+    { "id": "msg-080", "conversation_id": "con-023", "sender_id": "exp-013", "content": "Fechei com outro. Obrigado!", "created_at": "2026-05-10T16:00:00Z", "read_at": "2026-05-10T17:00:00Z" },
+
+    { "id": "msg-081", "conversation_id": "con-024", "sender_id": "clo-019", "content": "Imoveis e meu segmento principal. RJ inclusive.", "created_at": "2026-05-03T12:00:00Z", "read_at": "2026-05-03T13:00:00Z" },
+    { "id": "msg-082", "conversation_id": "con-024", "sender_id": "exp-014", "content": "Perfeito! Vamos marcar presencial.", "created_at": "2026-05-03T14:00:00Z", "read_at": "2026-05-03T15:00:00Z" },
+    { "id": "msg-083", "conversation_id": "con-024", "sender_id": "clo-019", "content": "Combinado, semana que vem na zona sul.", "created_at": "2026-05-03T16:00:00Z", "read_at": "2026-05-04T09:00:00Z" },
+    { "id": "msg-084", "conversation_id": "con-024", "sender_id": "exp-014", "content": "Vamos avancar com o teste.", "created_at": "2026-06-04T10:00:00Z", "read_at": null },
+
+    { "id": "msg-085", "conversation_id": "con-025", "sender_id": "clo-011", "content": "Tenho interesse na vaga.", "created_at": "2026-05-05T11:00:00Z", "read_at": "2026-05-05T12:00:00Z" },
+    { "id": "msg-086", "conversation_id": "con-025", "sender_id": "exp-014", "content": "Obrigado pelo interesse, vou avaliar.", "created_at": "2026-05-06T12:00:00Z", "read_at": "2026-05-06T13:00:00Z" },
+
+    { "id": "msg-087", "conversation_id": "con-026", "sender_id": "clo-001", "content": "Tenho experiencia em coaching de carreira.", "created_at": "2026-04-26T11:00:00Z", "read_at": "2026-04-26T12:00:00Z" },
+    { "id": "msg-088", "conversation_id": "con-026", "sender_id": "exp-015", "content": "Otimo! Vamos conversar.", "created_at": "2026-04-26T13:00:00Z", "read_at": "2026-04-26T14:00:00Z" },
+    { "id": "msg-089", "conversation_id": "con-026", "sender_id": "clo-001", "content": "Disponivel essa semana.", "created_at": "2026-04-26T15:00:00Z", "read_at": "2026-04-27T09:00:00Z" },
+    { "id": "msg-090", "conversation_id": "con-026", "sender_id": "exp-015", "content": "Vamos marcar pra semana que vem.", "created_at": "2026-06-03T14:00:00Z", "read_at": null },
+
+    { "id": "msg-091", "conversation_id": "con-027", "sender_id": "clo-012", "content": "Tenho experiencia juridica e gosto de recolocacao.", "created_at": "2026-04-28T14:00:00Z", "read_at": "2026-04-28T15:00:00Z" },
+    { "id": "msg-092", "conversation_id": "con-027", "sender_id": "exp-015", "content": "Curti seu perfil.", "created_at": "2026-04-28T16:00:00Z", "read_at": "2026-04-28T17:00:00Z" },
+    { "id": "msg-093", "conversation_id": "con-027", "sender_id": "exp-015", "content": "Vamos conversar.", "created_at": "2026-05-30T12:00:00Z", "read_at": null },
+
+    { "id": "msg-094", "conversation_id": "con-028", "sender_id": "clo-011", "content": "Tenho interesse na vaga.", "created_at": "2026-05-01T16:00:00Z", "read_at": "2026-05-01T17:00:00Z" },
+    { "id": "msg-095", "conversation_id": "con-028", "sender_id": "exp-015", "content": "Obrigado, vou avaliar.", "created_at": "2026-05-02T17:00:00Z", "read_at": "2026-05-03T08:00:00Z" },
+
+    { "id": "msg-096", "conversation_id": "con-029", "sender_id": "clo-003", "content": "Tenho 6 anos de B2B. Consultoria PME bate com meu perfil.", "created_at": "2026-04-11T10:00:00Z", "read_at": "2026-04-12T09:00:00Z" },
+    { "id": "msg-097", "conversation_id": "con-029", "sender_id": "exp-019", "content": "Oi! Vou avaliar.", "created_at": "2026-05-01T11:00:00Z", "read_at": "2026-05-01T12:00:00Z" },
+    { "id": "msg-098", "conversation_id": "con-029", "sender_id": "clo-003", "content": "Algum retorno?", "created_at": "2026-05-15T10:00:00Z", "read_at": "2026-05-16T09:00:00Z" },
+    { "id": "msg-099", "conversation_id": "con-029", "sender_id": "exp-019", "content": "Ainda estou pensando, te respondo logo.", "created_at": "2026-05-20T15:00:00Z", "read_at": null },
+
+    { "id": "msg-100", "conversation_id": "con-030", "sender_id": "clo-007", "content": "10 anos no mercado, posso ajudar.", "created_at": "2026-04-12T12:00:00Z", "read_at": "2026-04-13T09:00:00Z" },
+    { "id": "msg-101", "conversation_id": "con-030", "sender_id": "exp-019", "content": "Legal!", "created_at": "2026-05-15T10:00:00Z", "read_at": null },
+
+    { "id": "msg-102", "conversation_id": "con-031", "sender_id": "clo-001", "content": "Mentoria empresarial bate com alto ticket. Vamos?", "created_at": "2026-04-26T15:00:00Z", "read_at": "2026-04-27T09:00:00Z" },
+    { "id": "msg-103", "conversation_id": "con-031", "sender_id": "clo-001", "content": "Ainda tem vaga?", "created_at": "2026-05-15T11:00:00Z", "read_at": null },
+    { "id": "msg-104", "conversation_id": "con-031", "sender_id": "exp-019", "content": "Sim, vou te chamar essa semana.", "created_at": "2026-05-25T11:00:00Z", "read_at": null },
+
+    { "id": "msg-105", "conversation_id": "con-032", "sender_id": "clo-004", "content": "Yoga online bate com bem-estar.", "created_at": "2026-05-16T11:00:00Z", "read_at": "2026-05-16T12:00:00Z" },
+    { "id": "msg-106", "conversation_id": "con-032", "sender_id": "exp-020", "content": "Otimo perfil!", "created_at": "2026-05-16T13:00:00Z", "read_at": "2026-05-16T14:00:00Z" },
+    { "id": "msg-107", "conversation_id": "con-032", "sender_id": "exp-020", "content": "Vamos marcar uma call.", "created_at": "2026-06-02T16:00:00Z", "read_at": null },
+
+    { "id": "msg-108", "conversation_id": "con-033", "sender_id": "clo-002", "content": "Continuo disponivel pra essa nova vaga tambem.", "created_at": "2026-06-01T15:00:00Z", "read_at": "2026-06-01T16:00:00Z" },
+    { "id": "msg-109", "conversation_id": "con-033", "sender_id": "exp-002", "content": "Perfeito!", "created_at": "2026-06-03T11:00:00Z", "read_at": null },
+
+    { "id": "msg-110", "conversation_id": "con-034", "sender_id": "clo-003", "content": "Mais leads, mais oportunidade. Topo.", "created_at": "2026-06-02T17:00:00Z", "read_at": "2026-06-02T18:00:00Z" },
+    { "id": "msg-111", "conversation_id": "con-034", "sender_id": "exp-006", "content": "Bora marcar onboarding.", "created_at": "2026-06-04T10:00:00Z", "read_at": null }
+  ]
+}
