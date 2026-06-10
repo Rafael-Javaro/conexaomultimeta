@@ -44,12 +44,19 @@ jobs:
 
       - name: Create and deploy to gh-pages
         run: |
+          # Salva o diretório de build em um lugar seguro
+          mkdir -p /tmp/deploy
+          cp -r out/* /tmp/deploy/
+          
+          # Cria branch gh-pages limpa
           git checkout --orphan gh-pages
           git rm -rf .
-          git clean -fd
-          rm -rf * .* 2>/dev/null || true
-          cp -r out/* .
+          
+          # Copia arquivos de build para root
+          cp -r /tmp/deploy/* .
           echo "" > .nojekyll
+          
+          # Commit e push
           git add -A
           git commit -m "Deploy to GitHub Pages" || true
           git push origin gh-pages --force
